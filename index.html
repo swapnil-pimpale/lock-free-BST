@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Parallel rendering of depth images for fast object localization by swapnil-pimpale</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Parallel rendering of depth images for fast object localization</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/swapnil-pimpale/Parallel-Final-Project" class="btn">View on GitHub</a>
+      <a href="https://github.com/swapnil-pimpale/Parallel-Final-Project/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/swapnil-pimpale/Parallel-Final-Project/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
+<a id="summary" class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h3>
+
+<p>We are going to parallelize the rendering of multiple depth images for fast object localization on both GPU and multi-core CPU platforms and perform a detailed analysis of both systems' performance characteristics. This project idea is sponsored by Dr. Maxim Likhachev and Venkat Narayanan.</p>
+
+<h3>
+<a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h3>
+
+<p>Many computer vision problems in robotics are constrained by the availability of camera pose and 3D object models. To this end, it would be beneficial to perform object detection and localization by ‘simulating’ all possible hypotheses (each hypothesis is a depth image), as opposed to a traditional feature-based discriminative approach. Dr. Likhachev’s current system detects and localizes known objects in a RGB-D image by searching through all possible hypotheses/depth images.</p>
+
+<p>The current system in place is highly serial; the search algorithm that generates the set of all possible hypotheses/depth images is serial, the rendering of all the generated depth images is performed serially, and the actual algorithm to perform the rendering for a single depth image is also serial. In short, there are 3 layers of parallelization that can be implemented:</p>
+
+<ul>
+<li>Layer 1: Parallelize rendering of a single depth image (or single hypothesis)</li>
+<li>Layer 2: Parallelize rendering of multiple depth images (i.e, render multiple hypotheses in parallel)</li>
+<li>Layer 3: Parallelize the search algorithm itself</li>
+</ul>
+
+<p>For our project, we aim to focus on parallelizing the algorithm that renders a single hypothesis/depth image (Layer 1).</p>
+
+<h3>
+<a id="the-challenge" class="anchor" href="#the-challenge" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Challenge</h3>
+
+<p>The current algorithm for rendering a single depth image is a single-threaded serial implementation that is capable of running on a single CPU, with no known existing parallel implementation. The challenge lies in identifying data dependencies in the serial algorithm, and consequently using this information to determine how best to parallelize the algorithm, using the resources of a multi-core CPU and GPU. Comparing the performance of the parallel implementations on the CPU and the GPU will also shed light on the workloads’ amenability to a particular system architecture.</p>
+
+<h3>
+<a id="resources" class="anchor" href="#resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources</h3>
+
+<p>We plan to use the multi-core GHC CPUs and GHC GPUs for the project. The existing sequential algorithm for rendering a single depth image will be provided to us by Venkatraman Narayanan's (CMU PhD student), which we will study and then parallelize.</p>
+
+<h3>
+<a id="goals-and-deliverables" class="anchor" href="#goals-and-deliverables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Goals and Deliverables</h3>
+
+<p><strong>What we plan to achieve</strong>
+We plan to implement the Layer-1 phase on both GPU and multi-core CPU platforms and perform a detailed analysis of both systems' performance characteristics.
+We plan to deliver the following:
+1. Documented source code for both the CPU and GPU-implementations of the parallelized rendering algorithm for a single depth image.
+2. Charts/Graphs depicting the speedups obtained by both implementations of the parallelized algorithm, relative to each other and relative to the serial algorithm.
+And possibly:
+3. A visual demo of the rendering of the depth image (using all 3 implementations)</p>
+
+<p><strong>What we hope to achieve</strong>
+If we find ourselves ahead of the schedule after the completion of the Layer-1 phase we will move on to implementing the Layer-2 and Layer-3 phases. We are targeting to complete the implementation and performance analysis for Layer-1 phase to start with. If time permits we would move on to implement Layer-2 and Layer-3 phases in that order.</p>
+
+<h3>
+<a id="platform-choice" class="anchor" href="#platform-choice" aria-hidden="true"><span class="octicon octicon-link"></span></a>Platform Choice</h3>
+
+<p>For the multi-core version of the algorithm we plan to use OpenMP and for the GPU version of the algorithm we plan to use CUDA.</p>
+
+<p>As of this point, we do not know the exact hardware specifications of the Robot on which these algorithms will be run but since it is an embedded system we think that a shared-memory model like OpenMP is more appropriate for the CPU version.</p>
+
+<p>As for the GPU version, CUDA is the most natural choice for programming.</p>
+
+<h3>
+<a id="schedule" class="anchor" href="#schedule" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schedule</h3>
+
+<ul>
+<li>Week 1: Understand the existing code base and come up with an idea for parallel implementation.</li>
+<li>Week 2: Build an early version of the test harness to measure correctness and speedup.</li>
+<li>Week 3: Complete the implementation of the multi-core CPU version of the parallel algorithm.</li>
+<li>Week 4: Complete the implementation of the GPU version of the parallel algorithm.</li>
+<li>Week 5: Work on presentation, polishing the code, report, etc.</li>
+</ul>
+
+<h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>Swapnil Pimpale, Romit Kudtarkar</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/swapnil-pimpale/Parallel-Final-Project">Parallel rendering of depth images for fast object localization</a> is maintained by <a href="https://github.com/swapnil-pimpale">swapnil-pimpale</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
