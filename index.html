@@ -29,7 +29,7 @@
 
 <p>Many computer vision problems in robotics are constrained by the availability of camera pose and 3D object models. To this end, it would be beneficial to perform object detection and localization by ‘simulating’ all possible hypotheses (each hypothesis is a depth image), as opposed to a traditional feature-based discriminative approach. Dr. Likhachev’s current system detects and localizes known objects in a RGB-D image by searching through all possible hypotheses/depth images.</p>
 
-<p>The current system in place is highly serial; the search algorithm that generates the set of all possible hypotheses/depth images is serial, the rendering of all the generated depth images is performed serially, and the actual algorithm to perform the rendering for a single depth image is also serial. In short, there are 3 layers of parallelism that can be implemented:</p>
+<p>The current system in place is highly serial; the search algorithm that generates the set of all possible hypotheses/depth images is serial, the rendering of all the generated depth images is performed serially, and the actual algorithm to perform the rendering for a single depth image is also serial. In short, there are 3 layers of parallelization that can be implemented:</p>
 
 <ul>
 <li>Layer 1: Parallelize rendering of a single depth image (or single hypothesis)</li>
@@ -39,6 +39,11 @@
 
 <p>For our project, we aim to focus on parallelizing the algorithm that renders a single hypothesis/depth image (Layer 1).</p>
 
+<p>Input to the system: A depth image of the scene from a sensor such as Kinect, 3D models of N objects, number of objects in the scene K (K&lt;=N)
+Output: Location and orientation of each of the K objects
+Methodology: We want to localize objects by generating a hypothesis (depth image) that best matches the input, according to some error metric.
+We will treat this problem as a graph search problem to smartly search through the space of all possible hypothesis. </p>
+
 <h3>
 <a id="the-challenge" class="anchor" href="#the-challenge" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Challenge</h3>
 
@@ -47,7 +52,7 @@
 <h3>
 <a id="resources" class="anchor" href="#resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources</h3>
 
-<p>We plan to use the multi-core GHC CPUs and GHC GPUs for the project. The existing sequential algorithm for rendering a single depth image will be provided to us by Venkatraman Narayanan (CMU PhD student), which we will study and then parallelize.</p>
+<p>We plan to use the multi-core GHC CPUs and GHC GPUs for the project. The existing sequential algorithm for rendering a single depth image will be provided to us by Venkatraman Narayanan's (CMU PhD student), which we will study and then parallelize.</p>
 
 <h3>
 <a id="goals-and-deliverables" class="anchor" href="#goals-and-deliverables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Goals and Deliverables</h3>
@@ -55,13 +60,10 @@
 <p><strong>What we plan to achieve</strong>
 We plan to implement the Layer-1 phase on both GPU and multi-core CPU platforms and perform a detailed analysis of both systems' performance characteristics.
 We plan to deliver the following:
-<ol>
-	<li>Documented source code for both the CPU and GPU-implementations of the parallelized rendering algorithm for a single depth image.</li>
-	<li>Charts/Graphs depicting the speedups obtained by both implementations of the parallelized algorithm, relative to each other and relative to the serial algorithm.</li>
+1. Documented source code for both the CPU and GPU-implementations of the parallelized rendering algorithm for a single depth image.
+2. Charts/Graphs depicting the speedups obtained by both implementations of the parallelized algorithm, relative to each other and relative to the serial algorithm.
 And possibly:
-<li>A visual demo of the rendering of the depth image (using all 3 implementations)</li>
-</ol>
-</p>
+3. A visual demo of the rendering of the depth image (using all 3 implementations)</p>
 
 <p><strong>What we hope to achieve</strong>
 If we find ourselves ahead of the schedule after the completion of the Layer-1 phase we will move on to implementing the Layer-2 and Layer-3 phases. We are targeting to complete the implementation and performance analysis for Layer-1 phase to start with. If time permits we would move on to implement Layer-2 and Layer-3 phases in that order.</p>
