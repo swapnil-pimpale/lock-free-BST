@@ -19,14 +19,33 @@
     </section>
 
     <section class="main-content">
-      <p><a href="proposal.html">Proposal</a></p>
-
-<p><a href="updated_checkpoint.html">Updated Checkpoint</a></p>
+      <p>NOTE: We are heavily updating this page with some awesome results :-)
+Please visit us in a few hours. We won't disappoint :-)</p>
 
 <h3>
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h3>
 
-<p>We are going to implement two variants of a synchronized binary search tree (BST) data structure on a shared memory system, and compare the performance of both. Specifically, we will implement a fine-grained locking version, and a lock-free version of the BST, compare the performance of both on a variety of traces. The BST itself will support insert, search and delete operations. The performance will be tested under a variety of conditions - different tree sizes, different workloads and different degrees of contention. The lock-free algorithm will use atomic primitives like compare and swap (CAS), test and set, etc.</p>
+<p>We have implemented two variants of a synchronized binary search tree (BST) data structure on a shared memory model and analyzed the performance characteristics of both. Specifically, we have implemented a fine-grained locking version, and a lock-free version of the BST and compared the performance of both on a variety of traces. Our BST data structure supports insert, search and delete operations. We tested the performance under a variety of conditions - different tree sizes, different workloads (read-intensive, write-intensive, mixed) and different degrees of contention (low contention, high contention). The lock-free algorithm that we implemented uses atomic primitives like compare and swap (CAS) and value compare and swap (VCAS).</p>
+
+<h3>
+<a id="design-and-implementation" class="anchor" href="#design-and-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design and Implementation</h3>
+
+<p>Our BST data structure does not allow duplicates. The delete of a leaf node is done by setting its parent's corresponding pointer to NULL. The delete of a node with a single children is done by making its parent's corresponding pointer to the deleted node's child. The delete of a node with two children is performed with swapping its value with the next largest element in the tree and then the next largest element is deleted.</p>
+
+<p>We implemented the fine-grained version with pthread mutex locks associated with each node in the tree. We used the hand-over-hand locking mechanism for the insert and search operations. Since delete is done by swapping node values instead of actual pointer manipulation, a delete operation in the worst case requires a lock to be held on 4 nodes at a time.</p>
+
+<p>We implemented the lock-free version using the design discussed in [1]. This algorithm is non-blocking in that overall system progress is guaranteed even if there is a possibility of some threads being starved. Every node in the tree has an additional operation field which is used to store details about an ongoing operation on the node and precludes concurrent updates to that node.</p>
+
+<p>We identified the following memory management problem with the implementation of the above lock-free algorithm. The algorithm avoids the ABA problem occurring at the node pointers using "unique" NULL pointers. This is done by using the last two bits of the pointer. Since memory allocations are 4-byte and 8-byte aligned on 32-bit and 64-bit machines respectively</p>
+
+<h3>
+<a id="results" class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results</h3>
+
+<p>Claims:
+1) The lock-free version performs significantly better than the fine-grained version under high-contention
+2) The fine-grained version performs as good as the lock-free version under low-contention
+3) Our memory manager / garbage collector based on hazard pointers incurs significantly low overhead while reclaiming almost 100% of the allocated memory.
+We are going to implement two variants of a synchronized binary search tree (BST) data structure on a shared memory system, and compare the performance of both. Specifically, we will implement a fine-grained locking version, and a lock-free version of the BST, compare the performance of both on a variety of traces. The BST itself will support insert, search and delete operations. The performance will be tested under a variety of conditions - different tree sizes, different workloads and different degrees of contention. The lock-free algorithm will use atomic primitives like compare and swap (CAS), test and set, etc.</p>
 
 <h3>
 <a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h3>
