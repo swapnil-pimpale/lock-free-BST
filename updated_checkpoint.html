@@ -19,66 +19,6 @@
     </section>
 
     <section class="main-content">
-      <h3>
-<a id="summary" class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h3>
-
-<p>We are going to implement two variants of a synchronized binary search tree (BST) data structure on a shared memory system, and compare the performance of both. Specifically, we will implement a fine-grained locking version, and a lock-free version of the BST, compare the performance of both on a variety of traces. The BST itself will support insert, search and delete operations. The performance will be tested under a variety of conditions - different tree sizes, different workloads and different degrees of contention. The lock-free algorithm will use atomic primitives like compare and swap (CAS), test and set, etc.</p>
-
-<h3>
-<a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h3>
-
-<p>Multi-core, multi-processor architectures have become the norm these days. Hence, concurrent data structures are becoming increasingly important. Concurrent data structures can be accessed by multiple threads simultaneously. Lock-free programming is programming without locks. A lock-free implementation of a concurrent data structure guarantees that some thread can complete an operation in a finite number of steps regardless of the execution of other threads. Lock‑free programming uses atomic operations, such as atomic swap, test-and-set, fetch-and-add, compare-and-swap, load-link/store-conditional, etc., to maintain consistent state. Lock‑free programming can improve system throughput while avoiding issues with traditional locking based algorithms such as - deadlocks, livelocks, etc.</p>
-
-<h3>
-<a id="the-challenge" class="anchor" href="#the-challenge" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Challenge</h3>
-
-<p>The primary goal of this project is to implement an efficient lock-free BST and an efficient fine-grain-locked BST, and to analyze the performance of both under various workloads. Naturally, this means that both our BST implementations will be modified by several threads in parallel, and so the challenge would be to ensure that both BST implementations have a final state that is consistent with some interleaving of the various operations performed on it by the various threads. Given the dependencies associated between various nodes in a BST, and the insert, search and delete operations we plan to perform on the tree, we anticipate synchronization to be a challenge, especially lock-free synchronization.</p>
-
-<h3>
-<a id="resources" class="anchor" href="#resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources</h3>
-
-<p>We plan to test our implementation on both the GHC cluster machines and latedays. The configuration of both are as follows:</p>
-
-<ul>
-<li>ghc27-46.ghc.andrew.cmu.edu - six-core, 3.2 GHz Intel Xeon CPU</li>
-<li>latedays: Two, six-core Xeon e5-2620 v3 processors (2.4 GHz, 15MB L3 cache, hyper-threading, AVX2 instruction support), 16 GB RAM (60 GB/sec of BW)</li>
-</ul>
-
-<p>We are starting from scratch on this project.</p>
-
-<h3>
-<a id="goals-and-deliverables" class="anchor" href="#goals-and-deliverables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Goals and Deliverables</h3>
-
-<p><strong>What we plan to achieve and deliver</strong></p>
-
-<ol>
-<li>Documented source code for multi-threaded, fine-grained locking version of BST</li>
-<li>Documented source code for multi-threaded, lock-free version of BST</li>
-<li>Test harness code for performance comparison of both the above implementations</li>
-</ol>
-
-<p><strong>What we hope to achieve</strong></p>
-
-<p>If we find ourselves ahead of schedule we plan to scale up the project by implementing a lock free version for another (simpler) data structure.</p>
-
-<h3>
-<a id="platform-choice" class="anchor" href="#platform-choice" aria-hidden="true"><span class="octicon octicon-link"></span></a>Platform Choice</h3>
-
-<p>To test our implementation we need a shared memory system with high-core count so that we can vary the degree of contention by increasing and decreasing the number of threads accessing the BST. We are going to be using atomic primitives like CAS, test-and-set which are supported by almost all the Intel processors and so we can work with any of the GHC or latedays cluster machines.</p>
-
-<h3>
-<a id="schedule" class="anchor" href="#schedule" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schedule</h3>
-
-<p>We are already behind schedule by almost 2 weeks as a result of our proposal change. We plan to engage in a 3 or 4 day coding marathon for the next few days to design our basic test harness, so that we can get back on track.</p>
-
-<ul>
-<li>15th April - 18th April: Design test harness, and fine-grained locking version of BST</li>
-<li>21st April - 24th April: Work on lock-free version of BST</li>
-<li>25th April - 29th April: Both of us will be studying for exams, both for parallel and other classes</li>
-<li>30th April - 4th May: Romit will push forward as aggressively as possible continuing to work on our lock-free implementation, while Swapnil studies for another exam.</li>
-<li>4th May - 11th May: Swapnil will push forward as aggressively as possible to complete the lock-free implementation, get the project ready for final presentation, while Romit assists while studying for another exam.</li>
-</ul>
-
 <h3>
 <a id="checkpoint" class="anchor" href="#checkpoint" aria-hidden="true"><span class="octicon octicon-link"></span></a>Checkpoint</h3>
 

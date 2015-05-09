@@ -80,59 +80,6 @@
 </ul>
 
 <h3>
-<a id="checkpoint" class="anchor" href="#checkpoint" aria-hidden="true"><span class="octicon octicon-link"></span></a>Checkpoint</h3>
-
-<h4>
-<a id="overview-of-work-completed" class="anchor" href="#overview-of-work-completed" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview of work completed</h4>
-
-<p>We first implemented a basic testing framework as well as a single-threaded BST. The testing framework supported the reading of text files to construct a basic BST, and perform inserts, searches and deletes on a BST. We then augmented the testing framework by adding support to generate multiple threads to work on a single BST, before working on adding fine-grained locking to our BST to enable concurrent access. As of right now, we have implemented fine-grained locking for ‘insert’ operations, as well as ‘delete’ operations. We have performed some basic tests to ensure that our ‘insert’ and ‘delete’ operations are working correctly, but more rigorous testing needs to take place before we can ascertain the correctness of our implementations. In particular, the ‘delete’ operation is tricky due to the large number of cases that can arise as a result of deleting a node from a BST, so it must be tested rigorously. The ‘search’ operation uses identical fine-grained locking semantics to the ‘insert’ operation, so implementing it should not be a challenge.</p>
-
-<h4>
-<a id="goals-and-deliverables-1" class="anchor" href="#goals-and-deliverables-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Goals and Deliverables</h4>
-
-<p>As stated in our proposal, we plan to implement a fine-grained-locking version of a BST as well as a lock-free version of a BST, and compare their runtime performance on a variety of traces. The deliverables include the source code for both versions of the BST, as well as the test harness code.</p>
-
-<p>Given that it seems we are close to completing the fine-grained-locking version of the BST, we should be able to successfully complete both versions of the BST and perform the necessary analysis by the given project deadline. It is uncertain as to whether or not we will have time to implement another lock-free data structure, but it remains a possibility.</p>
-
-<h4>
-<a id="parallelism-competition-demo" class="anchor" href="#parallelism-competition-demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parallelism competition demo</h4>
-
-<p>We plan to present graphs of the runtime performance of both BST versions against a variety of traces, and explain the resulting trends in the graphs. The traces that we will analyze the performance on include write-heavy workloads, read-heavy workloads and mixed-workloads. Given that this project is more analysis-inclined, it is unlikely that we could produce any sort of meaningful visual demo (if you have suggestions, please let us know!).</p>
-
-<h4>
-<a id="issues-that-may-pose-a-challenge" class="anchor" href="#issues-that-may-pose-a-challenge" aria-hidden="true"><span class="octicon octicon-link"></span></a>Issues that may pose a challenge</h4>
-
-<p>Time and uncertainty pose the biggest challenge as of now. Based on our upcoming schedules, it seems that we will not be able to seriously start on the lock-free BST implementation till the 30th of April or 1st of May, which gives us only 10 days or so to finish the project. However, at that point, we will be done with most of our other classes, so we will be 100% committed to the project.</p>
-
-<p>Another issue that poses a challenge is the issue of testing. When performing a sequence of operations concurrently on a BST, the resulting BST will differ from one run to another, since the operations on the BST may be performed in a different order from one run to another. This makes it difficult to verify that our BST implementation is correct, particularly on larger BSTs. Thus far, we have relied on manual verification to ensure that our BST is functioning correctly, but this proves an unreasonable scheme for the workload-sizes we plan to perform runtime analysis on. We do not have a solution to this problem as of now.</p>
-
-<h4>
-<a id="updated-schedule" class="anchor" href="#updated-schedule" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updated Schedule</h4>
-
-<p>It is difficult for us at this stage to exactly specify what work will be performed at what time, especially during the last week or so. So instead we specify the availability of team members during particular periods of time.</p>
-
-<h4>
-<a id="define-work_on_other_stuff---404" class="anchor" href="#define-work_on_other_stuff---404" aria-hidden="true"><span class="octicon octicon-link"></span></a>#define WORK_ON_OTHER_STUFF   404</h4>
-
-<p>04/21: Add timing code to the existing test-harness. Get preliminary results for fine grained locked BST. Start designing the lockfree version.</p>
-
-<p>04/22: 404</p>
-
-<p>04/23: Complete the lockfree design and start lockfree implementation.</p>
-
-<p>04/24, 04/25, 04/26, 04/27, 04/28, 04/29: 404 / minimal work on parallel</p>
-
-<p>04/30, 05/01, 05/02, 05/03: Romit goes 100% during this period.</p>
-
-<p>05/04, 05/05, 05/06, 05/07: Swapnil joins in. Swapnil available for 100% of the time. Romit available for 50% of the time.</p>
-
-<p>05/08, 05/09,: Romit pulls a 404 for his database exam. Swapnil finishes the remaining stuff.</p>
-
-<p>05/10: Presentation preparation, etc.</p>
-
-<p>05/11: Project Competition</p>
-
-<h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
 <p>Swapnil Pimpale, Romit Kudtarkar</p>
