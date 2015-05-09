@@ -91,10 +91,7 @@
 
 <p>The high contention charts are where we see the actual benefit of the lock-free version. The numbers indicate that the lock-free version is on an average <em>1.96x</em> faster than the fine-grained version for read-intensive workload and <em>3.42x</em> faster for write-intensive workload.</p>
 
-<h3>
-<a id="coming-soon" class="anchor" href="#coming-soon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Coming Soon</h3>
-
-<p>Charts for memory reclamation done using the Hazard Pointers technique.</p>
+<p>Table-1 above shows the benefits of using Hazard Pointers technique. We can see that almost all of the nodes are successfully getting freed. This memory reclamation happens while the operations on the BST are ongoing and not at the end. So, the system will never run out of memory if there are equal number of inserts and deletes.</p>
 
 <h3>
 <a id="links" class="anchor" href="#links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Links</h3>
