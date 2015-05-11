@@ -1,3 +1,7 @@
+/**
+ * This is a BST implementation with no locks
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>

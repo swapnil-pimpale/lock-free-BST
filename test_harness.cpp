@@ -46,7 +46,6 @@ void check_valid_FG_Tree();
 void check_valid_LF_Tree();
 void populate_tree_values_FG(FG_BST_Node *root);
 void populate_tree_values_LF(LF_BST_Node *root);
-void runBasicTests();
 
 static struct option long_options[] = 
 {
@@ -69,7 +68,6 @@ void *perform_ops_FG(void *thread_args)
 		work = wq->get_work();
 		work_value = work.value;
 
-		//printf("Got work (%d:%d)\n", work_value, work.op_type);
 		if (work.op_type == INSERT) {
 			insert(work_value, g_root, NULL, tinfo->thread_num);
 		} else if (work.op_type == SEARCH) {
@@ -89,11 +87,6 @@ void *perform_ops_LF(void *thread_args)
 	LF_BST_Node *pred, *curr;
 	void *pred_op, *curr_op;
 	struct thread_info *tinfo = (struct thread_info *)thread_args;
-	//struct timeval start_time, end_time;
-	//long int time_diff;
-
-	//printf("Lock_free tree: In thread with thread ID = %lu, thread number = %d\n", tinfo->thread_id,
-	//       tinfo->thread_num);
 	
 	while (!all_threads_created);
 
@@ -101,7 +94,6 @@ void *perform_ops_LF(void *thread_args)
 		work = wq->get_work();
 		work_value = work.value;
 
-		//printf("Got work (%d:%d)\n", work_value, work.op_type);
 		if (work.op_type == INSERT) {
 			add(work_value, tinfo->thread_num);
 		} else if (work.op_type == SEARCH) {
@@ -138,7 +130,6 @@ int init_harness(void)
 	/*
 	 * Create the initial tree
 	 */
-	//printf("Attempting to create tree from create_file = %s\n", create_file);
 	std::ifstream create_tree_file(create_file);
 	std::string str;
 
@@ -146,7 +137,6 @@ int init_harness(void)
 	while (std::getline(create_tree_file, str)) {
 		std::string value = str.substr(str.find(' '));
 		int val = std::stoi(value);
-		//printf("Inserting value %d into tree...\n", val);
 		
 		if(perform_FG_test) {
 			//perform insertion into fine-grained tree
@@ -176,7 +166,6 @@ int init_harness(void)
 	}
 
 	WORK w;
-	//printf("Using the test file %s\n", test_file);
 	std::ifstream tracefile(test_file);
 	while (std::getline(tracefile, str)) {
 		std::string operation = str.substr(0, str.find(' '));
@@ -203,7 +192,6 @@ int init_harness(void)
 		wq->put_work(w);
 	}
 	tracefile.close();
-
 
 	/*
 	 * Create and start the threads
@@ -312,7 +300,6 @@ int main(int argc, char **argv)
 	}
 
 	init_harness();
-	//test_ptr_functions();
 
 	return 0;
 }	
@@ -549,21 +536,4 @@ void populate_tree_values_LF(LF_BST_Node *root)
 	//printf("Ptr: %p, Left: %p, Val: %d, Right: %p, Flag: %d\n", root, root->left, root->key, root->right,
 	//	GET_FLAG(root->op));
 	populate_tree_values_LF(root->right);
-}
-
-void runBasicTests()
-{
-#if 0
-	printTree(g_root);
-	search(4, g_root);
-	search(12, g_root);
-	search(6, g_root);
-	search(8, g_root);
-	search(-110, g_root);
-	remove(4, g_root);
-#endif
-	insert(21, g_root, NULL, -1);
-	insert(39, g_root, NULL, -1);
-	insert(5, g_root, NULL, -1);
-	insert(2, g_root, NULL, -1);
 }

@@ -12,8 +12,6 @@
 #include "Lock_Free_BST.h"
 #include "threads.h"
 
-//LF_BST_Node *hp[MAX_THREADS * NUM_HP_PER_THREAD];
-//std::map<int, std::vector<LF_BST_Node *>> rlist;
 std::array<std::atomic<LF_BST_Node *>, MAX_THREADS * NUM_HP_PER_THREAD> hp;
 std::vector<LF_BST_Node *> rlist[MAX_THREADS];
 int hp_off[MAX_THREADS];
@@ -41,7 +39,6 @@ int GET_FLAG(void *ptr)
 
 void *UNFLAG(void *ptr)
 {
-	//ptr = (void *) ( ((uintptr_t) ptr >> 2) << 2);
 	ptr = (void *)((uintptr_t)ptr & ~(uintptr_t)THREE);
 	return ptr;
 }
@@ -118,7 +115,6 @@ void add(int key, int thread_num)
 			 *  In this case helpChildCAS() will replace the left or right 
 			 *  child of curr (old) with the update (newNode)
 			 */
-			//printf("Adding new node %p to hp list of thread %d\n", newNode, thread_num);
 			helpChildCAS(cas_op, curr, thread_num);
 			return;
 		} else {
@@ -218,7 +214,7 @@ retry:
 	 * If we didn't find the key, verify that having searched last_right's
 	 * right subtree, the key could not have been added to last_right's left
 	 * subtree.
-	 * I think this can happen if there was a concurrent delete operation which
+	 * This can happen if there was a concurrent delete operation which
 	 * replaced the key at last_right (thus increasing the search range of the 
 	 * left subtree) followed by an insert of key.
 	 * If so, retry the find() from the start.
@@ -342,7 +338,6 @@ void help(LF_BST_Node *pred, void *pred_op, LF_BST_Node *curr, void *curr_op, in
 
 void add_to_hp_list(int thread_num, LF_BST_Node *node)
 {
-	//printf("Thread %d Adding node %p to hp list\n", thread_num, node);
 	hp[hp_off[thread_num]] = node;
 
 	hp_off[thread_num]++;
@@ -370,18 +365,12 @@ void helpChildCAS(Child_CAS_OP *op, LF_BST_Node *dest, int thread_num)
 	if (__sync_bool_compare_and_swap(address, op->expected, op->update) && hazard_pointers) {
 
 		if (UNFLAG(op->expected) != NULL) {
-			//std::vector<LF_BST_Node *> vec;
-			//vec.push_back((LF_BST_Node *)UNFLAG(op->expected));
-			//rlist[thread_num] = vec;
 			std::vector<LF_BST_Node *>::iterator rlist_vec_itr;
 
 			if (std::find(rlist[thread_num].begin(), rlist[thread_num].end(),
 			    (LF_BST_Node *)UNFLAG(op->expected)) == rlist[thread_num].end()) {
-				//printf("Thread %d adding node %p to its rlist\n", thread_num, (LF_BST_Node *)UNFLAG(op->expected));
 				rlist[thread_num].push_back((LF_BST_Node *)UNFLAG(op->expected));
 			}
-		} else {
-			//printf("Thread %d, expected (%p) is NULL\n", thread_num, op->expected);
 		}
 
 		if (rlist[thread_num].size() > HP_THRESHOLD) {
@@ -401,7 +390,6 @@ void helpChildCAS(Child_CAS_OP *op, LF_BST_Node *dest, int thread_num)
 				}
 
 				if (ok_to_free) {
-					//printf("Thread %d freeing retired node %p\n", thread_num, retired_node);
 					delete retired_node;
 					rlist[thread_num].erase(std::find(rlist[thread_num].begin(),
 									  rlist[thread_num].end(),
@@ -534,48 +522,6 @@ bool helpRelocate(Relocate_OP *op, LF_BST_Node *pred, void *pred_op, LF_BST_Node
 	return result;
 }
 
-#if 0
-void test_ptr_functions() {
-	void *temp = (void *) new int();
-	void *modified = temp;
-	printf("Actual pointer: %p\n", temp);
-
-	int flag = 0;
-	printf("Setting flag %d\n", flag);
-	modified = SET_FLAG(temp, flag);
-	printf("Value after setting flag: %p\n", modified);
-	printf("Flag: %d\n", GET_FLAG(modified));
-	printf("Actual pointer: %p\n", UNFLAG(modified));
-
-	flag = 1;
-	printf("Setting flag %d\n", flag);
-	modified = SET_FLAG(temp, flag);
-	printf("Value after setting flag: %p\n", modified);
-	printf("Flag: %d\n", GET_FLAG(modified));
-	printf("Actual pointer: %p\n", UNFLAG(modified));
-
-	flag = 2;
-	printf("Setting flag %d\n", flag);
-	modified = SET_FLAG(temp, flag);
-	printf("Value after setting flag: %p\n", modified);
-	printf("Flag: %d\n", GET_FLAG(modified));
-	printf("Actual pointer: %p\n", UNFLAG(modified));
-
-	flag = 3;
-	printf("Setting flag %d\n", flag);
-	modified = SET_FLAG(temp, flag);
-	printf("Value after setting flag: %p\n", modified);
-	printf("Flag: %d\n", GET_FLAG(modified));
-	printf("Actual pointer: %p\n", UNFLAG(modified));
-
-	printf("Setting pointer to NULL\n");
-	modified = SET_NULL(temp);
-	printf("Nullified pointer is %p\n", modified);
-	printf("IS_NULL returns %d\n", IS_NULL(modified));
-	printf("IS_NULL on non-nullified pointer returns %d\n", IS_NULL(temp));
-}
-#endif
-
 LF_BST_Node *create_LF_node(int key)
 {
 	LF_BST_Node *newNode = new LF_BST_Node;
@@ -586,4 +532,3 @@ LF_BST_Node *create_LF_node(int key)
 	return newNode;
 
 }
-

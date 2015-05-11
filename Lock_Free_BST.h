@@ -1,11 +1,11 @@
 #ifndef _LOCK_FREE_BST_H_
 #define _LOCK_FREE_BST_H_
 
-#define ONE		0x00000001
-#define TWO		0x00000002
-#define THREE		0x00000003
-#define HP_THRESHOLD	0
-#define NUM_HP_PER_THREAD               20
+#define ONE				0x00000001
+#define TWO				0x00000002
+#define THREE				0x00000003
+#define HP_THRESHOLD			6
+#define NUM_HP_PER_THREAD               10
 
 enum flag_type {
 	NONE = 0,

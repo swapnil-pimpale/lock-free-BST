@@ -46,7 +46,6 @@ void search(int val, FG_BST_Node *root, FG_BST_Node *parent)
 			search(val, root->right, root);
 		}
 	} else {
-		//printf("Search succeeded, found the node with value %d\n", val);
 		pthread_mutex_unlock(&root->lock);
 	}
 }	
@@ -113,97 +112,6 @@ FG_BST_Node* createNode(int val, FG_BST_Node *parent) {
 	return node;
 }
 
-#if 0
-int remove(int val, FG_BST_Node *root)
-{
-	FG_BST_Node *to_be_deleted, *parent, *successor_parent, *successor;
-
-	if (root == NULL) {
-		printf("Root of the tree is NULL\n");
-		return -EINVAL;
-	}
-
-	to_be_deleted = search(val, root);
-	if (to_be_deleted == NULL) {
-		printf("Could not find the item to be deleted\n");
-		return 0;
-	}
-
-	parent = to_be_deleted->parent;
-	if ((to_be_deleted->left == NULL && to_be_deleted->right != NULL) ||
-	    (to_be_deleted->left != NULL && to_be_deleted->right == NULL)) {
-		/*
-		 * node to be deleted has only one child. So just patch the child
-		 * to the parent
-		 */		
-		if (parent != NULL) {
-			if (to_be_deleted->left != NULL) {
-				if (to_be_deleted->value >= parent->value) {
-					parent->right = to_be_deleted->left;
-				} else {
-					parent->left = to_be_deleted->left;
-				}
-			} else {
-				if (to_be_deleted->value >= parent->value) {
-					parent->right = to_be_deleted->right;
-				} else {
-					parent->left = to_be_deleted->right;
-				}
-			}
-		} else {
-			if (to_be_deleted->left != NULL)
-				g_root = to_be_deleted->left;
-			else
-				g_root = to_be_deleted->right;
-		}
-
-		free(to_be_deleted);
-	}
-
-	successor = get_inorder_successor(to_be_deleted);
-	if (successor == NULL && parent == NULL) {
-		// deleting the root and tree has only the root
-		free(to_be_deleted);
-	} else if (successor != NULL && parent == NULL) {
-		// deleting the root and tree has other nodes
-		successor_parent = successor->parent;
-		to_be_deleted->value = successor->value;
-		if (successor->value >= successor_parent->value) {
-			successor_parent->right = NULL;
-		} else {
-			successor_parent->left = NULL;
-		}
-
-		free(successor);
-	} else if (successor == NULL && parent != NULL) {
-		// deleting a leaf node
-		if (to_be_deleted->value >= parent->value) {
-			parent->right = NULL;
-		} else {
-			parent->left = NULL;
-		}
-
-		free(to_be_deleted);
-	} else if (successor != NULL && parent != NULL) {
-		successor_parent = successor->parent;
-		// deleting an internal node
-		successor_parent = successor->parent;
-		to_be_deleted->value = successor->value;
-		if (successor->value >= successor_parent->value) {
-			successor_parent->right = NULL;
-		} else {
-			successor_parent->left = NULL;
-		}
-
-		free(successor);
-	} else {
-		assert(0);
-	}
-
-	return 0;
-}
-#endif
-
 /**
  * del_search:
  * search for the first node that matches the value val.
@@ -214,14 +122,12 @@ int remove(int val, FG_BST_Node *root)
  */
 FG_BST_Node* del_search(int val, FG_BST_Node* root, int thread_num)
 {
-	//printf("Thread-%d is at %d\n", thread_num, root->value);
 	if(val == root->value) {
 		/*
 		 * We will come in here if we want to delete the root node.
 		 * No need to lock the root because it is already locked by
 		 * the caller.
 		 */
-		//printf("Found the node with value: %d\n", root->value);
 		return root; 
 	} else if (val < root->value) {
 		if (root->left == NULL) {
@@ -280,7 +186,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 		 * set the tree's global root as NULL,
 		 * unlock the treelock and return
 		 */
-		//pthread_mutex_unlock(&root->lock);
 		free(root);
 		g_root = NULL;
 		pthread_mutex_unlock(&tree_lock);
@@ -313,15 +218,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 	 */
 	if (to_be_deleted->left == NULL && to_be_deleted->right == NULL &&
 	    parent == NULL) {
-#if 0
-		/*
-		 * Should never come here.
-		 * This means the to_be_deleted_ node is the root with no other nodes
-		 * in the tree. This case is handled above.
-		 */
-		assert(0);
-#endif
-		//pthread_mutex_unlock(&to_be_deleted->lock);
 		free(to_be_deleted);
 		g_root = NULL;
 		pthread_mutex_unlock(&tree_lock);
@@ -337,7 +233,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 			 * Unlock to_be_deleted. We can safely unlock here because we hold 
 			 * a lock on the parent and nobody else can come and modify to_be_deleted
 			 */
-			//pthread_mutex_unlock(&to_be_deleted->lock);
 			// free the node
 			free(to_be_deleted);
 			// set parent's left child as NULL
@@ -348,7 +243,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 		} else {
 			// node to be deleted is the right child of its parent
 			// Follow the same procedure as above
-			//pthread_mutex_unlock(&to_be_deleted->lock);
 			free(to_be_deleted);
 			parent->right = NULL;
 			pthread_mutex_unlock(&parent->lock);
@@ -426,7 +320,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 			successor_parent->left = NULL;
 		}
 
-		//pthread_mutex_unlock(&successor->lock);
 		free(successor);
 		pthread_mutex_unlock(&successor_parent->lock);
 		pthread_mutex_unlock(&to_be_deleted->lock);
@@ -465,7 +358,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 				to_be_deleted->left = NULL;
 			}
 
-			//pthread_mutex_unlock(&predecessor->lock);
 			free(predecessor);
 			pthread_mutex_unlock(&to_be_deleted->lock);
 			return 0;
@@ -496,7 +388,6 @@ int remove(int val, FG_BST_Node *root, int thread_num)
 			to_be_deleted->value = predecessor->value;
 			predecessor_parent->right = NULL;
 		}
-		//pthread_mutex_unlock(&predecessor->lock);
 		free(predecessor);
 		pthread_mutex_unlock(&predecessor_parent->lock);
 		pthread_mutex_unlock(&to_be_deleted->lock);
