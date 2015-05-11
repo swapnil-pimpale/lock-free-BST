@@ -1,0 +1,16 @@
+delete 7
+delete 4
+delete 10
+delete 1
+delete 6
+delete 8
+delete 15
+delete 2
+delete 32
+delete 24
+delete 11
+delete 5
+delete 9
+delete 26
+delete 31
+delete 17
