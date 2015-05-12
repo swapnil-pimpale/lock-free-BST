@@ -52,7 +52,7 @@
 <p>We solved this problem using the <em>Hazard Pointers</em> mechanism as described in [2]. Hazard pointers are single writer, multiple readers pointers. The idea is to maintain a per-thread list of hazard pointers. This list contains all the pointers that the thread currently holds reference to. Whenever any thread decides that a node can be removed from the tree it pushes that node in a per-thread <em>"retired nodes (rlist)"</em> list. When the size of this rlist goes beyond an arbitrarily set threshold the thread does a scan over all the nodes in its rlist. For every retired node in the rlist, it traverses the hazard pointers list of all the other threads and checks if any other thread still has a reference to it. If not, this node can be safely removed from the tree. Otherwise, the removal of this node is deferred until next time. Our experiments demonstrate that our technique reclaims more than <em>99%</em> of the memory during the entire run of the program.</p>
 
 <h3>
-<a id="results" class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results</h3>
+<a id="results" class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Intermediate Results</h3>
 
 <p>Claims:</p>
 
